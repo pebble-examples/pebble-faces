@@ -1,0 +1,21 @@
+{
+  "uuid": "9f1e3aed-98f8-41ec-9bff-2c15fa4f3c24",
+  "shortName": "PbFaces",
+  "longName": "Pebble Faces",
+  "companyName": "MakeAwesomeHappen",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "NETIMAGE_DATA": 1768777472,
+    "NETIMAGE_BEGIN": 1768777473,
+    "NETIMAGE_END": 1768777474,
+    "NETIMAGE_CHUNK_SIZE": 1768777475,
+    "NETIMAGE_URL": 1768777476
+  },
+  "resources": {
+    "media": []
+  }
+}
