@@ -73,6 +73,7 @@ static void init(void) {
 }
 
 static void deinit(void) {
+  netimage_deinitialize(); // call this to avoid 20B memory leak
   window_destroy(window);
 }
 
