@@ -88,18 +88,14 @@ void netimage_receive(DictionaryIterator *iter, void *context) {
         GBitmap *bitmap = gbitmap_create_with_data(ctx->data);
         if (bitmap) {
           ctx->callback(bitmap);
-          // free memory
-          free(ctx->data);
-          ctx->data = NULL;
-          ctx->index = ctx->length = 0;
         }
         else {
           APP_LOG(APP_LOG_LEVEL_DEBUG, "Unable to create GBitmap. Is this a valid PBI?");
-          // free memory
-          free(ctx->data);
-          ctx->data = NULL;
-          ctx->index = ctx->length = 0;
         }
+        // free memory
+        free(ctx->data);
+        ctx->data = NULL;
+        ctx->index = ctx->length = 0;
       }
       else {
         APP_LOG(APP_LOG_LEVEL_DEBUG, "Got End message but we have no image...");
