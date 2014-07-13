@@ -88,7 +88,8 @@ void netimage_receive(DictionaryIterator *iter, void *context) {
         GBitmap *bitmap = gbitmap_create_with_data(ctx->data);
         if (bitmap) {
           ctx->callback(bitmap);
-          // We have transfered ownership of this memory to the app. Make sure we dont free it.
+          // free memory
+          free(ctx->data);
           ctx->data = NULL;
           ctx->index = ctx->length = 0;
         }
