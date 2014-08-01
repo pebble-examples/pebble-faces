@@ -12,7 +12,14 @@
 /* The key used to request a PBI */
 #define NETIMAGE_URL NETIMAGE_DATA + 4
 
-typedef void (*NetImageCallback)(GBitmap *image);
+typedef struct {
+  /* The GBitmap created with the image data. */
+  GBitmap*  bmp;
+  /* We keep a pointer to the data so we can free it later. */
+  uint8_t*  data;
+} NetImage;
+
+typedef void (*NetImageCallback)(NetImage *image);
 
 typedef struct {
   /* size of the data buffer allocated */
@@ -31,6 +38,9 @@ void netimage_initialize();
 void netimage_deinitialize();
 
 void netimage_request(char *url);
+
+// Call this when you are done using an image to properly free memory.
+void netimage_destroy(NetImage *image);
 
 void netimage_receive(DictionaryIterator *iter, void *context);
 void netimage_dropped(AppMessageResult reason, void *context);
