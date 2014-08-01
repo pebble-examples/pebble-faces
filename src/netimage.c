@@ -48,6 +48,16 @@ void netimage_request(char *url) {
   app_message_outbox_send();
 }
 
+void netimage_destroy(NetImage *image) {
+  // We malloc'd that memory before creating the GBitmap
+  // We are responsible for freeing it.
+  if (image) {
+    gbitmap_destroy(image->bmp);
+    free(image->data);
+    free(image);
+  }
+}
+
 void netimage_receive(DictionaryIterator *iter, void *context) {
   NetImageContext *ctx = (NetImageContext*) context;
 
@@ -85,10 +95,15 @@ void netimage_receive(DictionaryIterator *iter, void *context) {
       break;
     case NETIMAGE_END:
       if (ctx->data && ctx->length > 0 && ctx->index > 0) {
+        NetImage *image = malloc(sizeof(NetImage));
         GBitmap *bitmap = gbitmap_create_with_data(ctx->data);
-        if (bitmap) {
-          ctx->callback(bitmap);
+        if (image && bitmap) {
+          printf("Gbitmap=%p Gbitmap->addr=%p ctx->data=%p", bitmap, bitmap->addr, ctx->data);
+          image->bmp = bitmap;
+          image->data = ctx->data;
+          ctx->callback(image);
           // We have transfered ownership of this memory to the app. Make sure we dont free it.
+          // (see netimage_destroy for cleanup)
           ctx->data = NULL;
           ctx->index = ctx->length = 0;
         }
@@ -98,6 +113,9 @@ void netimage_receive(DictionaryIterator *iter, void *context) {
           free(ctx->data);
           ctx->data = NULL;
           ctx->index = ctx->length = 0;
+          if (image) {
+            free(image);
+          }
         }
       }
       else {

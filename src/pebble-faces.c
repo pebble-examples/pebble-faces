@@ -4,7 +4,7 @@
 static Window *window;
 static TextLayer *text_layer;
 static BitmapLayer *bitmap_layer;
-static GBitmap *current_image;
+static NetImage *current_image;
 
 static char *images[] = {
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-js/alex.png.pbi",
@@ -14,10 +14,21 @@ static char *images[] = {
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-js/chris.png.pbi",
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-js/eric.png.pbi",
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-js/joseph.png.pbi",
-  "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-js/thomas.png.pbi",
-  "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-js/tom.png.pbi"
+  "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-js/thomas.png.pbi"
 };
 static uint image = 0;
+
+void show_next_image() {
+  netimage_request(images[image]);
+
+  image++;
+  if (image >= sizeof(images)/sizeof(char*)) {
+    image = 0;
+  }
+
+  // show that we are loading...
+  bitmap_layer_set_bitmap(bitmap_layer, NULL);
+}
 
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
@@ -31,35 +42,34 @@ static void window_load(Window *window) {
   bitmap_layer = bitmap_layer_create(bounds);
   layer_add_child(window_layer, bitmap_layer_get_layer(bitmap_layer));
   current_image = NULL;
+
+  // Let's get started!
+  show_next_image();
 }
 
 static void window_unload(Window *window) {
   text_layer_destroy(text_layer);
   bitmap_layer_destroy(bitmap_layer);
-  if (current_image) {
-    free(current_image);
-  }
+  netimage_destroy(current_image);
 }
 
-void display_image(GBitmap *image) {
-  bitmap_layer_set_bitmap(bitmap_layer, image);
+void image_loaded_handler(NetImage *image) {
+  bitmap_layer_set_bitmap(bitmap_layer, image->bmp);
   // Free the memory used by the previous image
-  if (current_image) {
-    free(current_image);
-  }
+  netimage_destroy(current_image);
   // Keep a pointer to this image data so we can free it later.
   current_image = image;
 }
 
 void tap_handler(AccelAxisType accel, int32_t direction) {
-  if (++image > sizeof(images)) image = 0;
-  netimage_request(images[image]);
-
-  // show that we are loading...
-  display_image(NULL);
+  show_next_image();
 }
 
 static void init(void) {
+  // Need to initialize this first to make sure it is there when
+  // the window_load function is called by window_stack_push.
+  netimage_initialize(image_loaded_handler);
+
   window = window_create();
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
@@ -68,7 +78,6 @@ static void init(void) {
   const bool animated = true;
   window_stack_push(window, animated);
 
-  netimage_initialize(display_image);
   accel_tap_service_subscribe(tap_handler);
 }
 
