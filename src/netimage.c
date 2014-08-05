@@ -39,8 +39,8 @@ void netimage_deinitialize() {
 void netimage_request(char *url) {
   DictionaryIterator *outbox;
   app_message_outbox_begin(&outbox);
-  // Tell the javascript how big we want each chunk of data - 8 is the dictionary overhead
-  uint32_t chunk_size = app_message_inbox_size_maximum() - 8;
+  // Tell the javascript how big we want each chunk of data: max possible size - dictionary overhead with one Tuple in it.
+  uint32_t chunk_size = app_message_inbox_size_maximum() - dict_calc_buffer_size(1);
   dict_write_int(outbox, NETIMAGE_CHUNK_SIZE, &chunk_size, sizeof(uint32_t), false);
   // Send the URL
   dict_write_cstring(outbox, NETIMAGE_URL, url);
