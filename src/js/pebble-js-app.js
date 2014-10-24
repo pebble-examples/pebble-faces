@@ -15,6 +15,9 @@ Pebble.addEventListener("appmessage", function(e) {
           function() { console.log("Done!"); transferInProgress = false; },
           function(e) { console.log("Failed! " + e); transferInProgress = false; }
         );
+      },
+      function(e) {
+        console.log("Download failed: " + e); transferInProgress = false;
       });
     }
     else {
