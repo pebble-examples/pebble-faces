@@ -3,8 +3,13 @@
   "shortName": "PbFaces",
   "longName": "Pebble Faces",
   "companyName": "MakeAwesomeHappen",
-  "versionCode": 2,
-  "versionLabel": "1.1",
+  "versionCode": 3,
+  "versionLabel": "1.2",
+  "sdkVersion": "3",
+  "targetPlatforms": [
+    "aplite",
+    "basalt"
+  ],
   "watchapp": {
     "watchface": false
   },
