@@ -76,6 +76,19 @@ Grey, you can use this command:
       -define png:exclude-chunk=all \
       myimage.pbl.png
 
+### SDK 3.x
+
+To convert your image to the palletized format (64 colors) used by Pebble Time, use:
+
+    convert myimage.png \
+      -adaptive-resize '144x168>' \
+      -fill '#FFFFFF00' -opaque none \
+      -dither FloydSteinberg \
+      -remap pebble_colors_64.gif \
+      -define png:compression-level=9 -define png:compression-strategy=0 \
+      -define png:exclude-chunk=all \
+      myimage.pbl.png
+
 **Important:** You need ImageMagick to do the conversion above. Mac OS X ships
 with GraphicsMagick which does not support the PNG options to compress and
 remove un-needed informations.
