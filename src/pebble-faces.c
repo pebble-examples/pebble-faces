@@ -1,7 +1,8 @@
 #include <pebble.h>
 #include "netdownload.h"
+#ifdef PBL_PLATFORM_APLITE
 #include "png.h"
-
+#endif
 static Window *window;
 static TextLayer *text_layer;
 static BitmapLayer *bitmap_layer;
@@ -66,7 +67,11 @@ void download_complete_handler(NetDownload *download) {
   printf("Loaded image with %lu bytes", download->length);
   printf("Heap free is %u bytes", heap_bytes_free());
 
+  #ifdef PBL_PLATFORM_APLITE
   GBitmap *bmp = gbitmap_create_with_png_data(download->data, download->length);
+  #else
+    GBitmap *bmp = gbitmap_create_from_png_data(download->data, download->length);
+  #endif
   bitmap_layer_set_bitmap(bitmap_layer, bmp);
 
   // Save pointer to currently shown bitmap (to free it)
@@ -76,7 +81,11 @@ void download_complete_handler(NetDownload *download) {
   current_bmp = bmp;
 
   // Free the memory now
+  #ifdef PBL_PLATFORM_APLITE
   // gbitmap_create_with_png_data will free download->data
+  #else
+    free(download->data);
+  #endif
   // We null it out now to avoid a double free
   download->data = NULL;
   netdownload_destroy(download);

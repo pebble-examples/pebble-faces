@@ -1,3 +1,4 @@
+#ifdef PBL_PLATFORM_APLITE
 /*
 uPNG -- derived from LodePNG version 20100808
 
@@ -1350,3 +1351,4 @@ unsigned upng_get_size(const upng_t* upng)
 	return upng->size;
 }
 
+#endif // ifdef PBL_PLATFORM_APLITE
