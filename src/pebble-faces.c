@@ -101,7 +101,9 @@ static void init(void) {
   netdownload_initialize(download_complete_handler);
 
   window = window_create();
+#ifdef PBL_SDK_2
   window_set_fullscreen(window, true);
+#endif
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
