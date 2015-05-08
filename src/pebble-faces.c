@@ -68,7 +68,7 @@ void download_complete_handler(NetDownload *download) {
   printf("Heap free is %u bytes", heap_bytes_free());
 
   #ifdef PBL_PLATFORM_APLITE
-  GBitmap *bmp = gbitmap_create_with_png_data(download->data, download->length);
+    GBitmap *bmp = gbitmap_create_with_png_data(download->data, download->length);
   #else
     GBitmap *bmp = gbitmap_create_from_png_data(download->data, download->length);
   #endif
@@ -95,10 +95,19 @@ void tap_handler(AccelAxisType accel, int32_t direction) {
   show_next_image();
 }
 
+static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
+  show_next_image();
+}
+
+static void click_config_provider(void *context) {
+  // Register the ClickHandlers
+  window_single_click_subscribe(BUTTON_ID_DOWN, down_click_handler);
+}
+
 static void init(void) {
   // Need to initialize this first to make sure it is there when
   // the window_load function is called by window_stack_push.
-  netdownload_initialize(download_complete_handler);
+  netdownload_initialize(download_complete_handler, NULL);
 
   window = window_create();
 #ifdef PBL_SDK_2
@@ -109,6 +118,7 @@ static void init(void) {
     .unload = window_unload,
   });
   const bool animated = true;
+  window_set_click_config_provider(window, click_config_provider);
   window_stack_push(window, animated);
 
   accel_tap_service_subscribe(tap_handler);

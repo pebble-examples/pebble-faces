@@ -1,12 +1,13 @@
 #include "netdownload.h"
 
-NetDownloadContext* netdownload_create_context(NetDownloadCallback callback) {
+NetDownloadContext* netdownload_create_context(NetDownloadCallback callback, CustomReceivedHandler custom_handler_callback) {
   NetDownloadContext *ctx = malloc(sizeof(NetDownloadContext));
 
   ctx->length = 0;
   ctx->index = 0;
   ctx->data = NULL;
   ctx->callback = callback;
+  ctx->custom_handler_callback = custom_handler_callback;
 
   return ctx;
 }
@@ -18,8 +19,8 @@ void netdownload_destroy_context(NetDownloadContext *ctx) {
   free(ctx);
 }
 
-void netdownload_initialize(NetDownloadCallback callback) {
-  NetDownloadContext *ctx = netdownload_create_context(callback);
+void netdownload_initialize(NetDownloadCallback callback, CustomReceivedHandler custom_handler_callback) {
+  NetDownloadContext *ctx = netdownload_create_context(callback, custom_handler_callback);
   APP_LOG(APP_LOG_LEVEL_DEBUG, "NetDownloadContext = %p", ctx);
   app_message_set_context(ctx);
 
@@ -27,7 +28,7 @@ void netdownload_initialize(NetDownloadCallback callback) {
   app_message_register_inbox_dropped(netdownload_dropped);
   app_message_register_outbox_sent(netdownload_out_success);
   app_message_register_outbox_failed(netdownload_out_failed);
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Max buffer sizes are %li / %li", app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Max buffer sizes are in:%li / out:%li", app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
   app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
 }
 
@@ -111,7 +112,9 @@ void netdownload_receive(DictionaryIterator *iter, void *context) {
       }
       break;
     default:
-      APP_LOG(APP_LOG_LEVEL_WARNING, "Unknown key in dict: %lu", tuple->key);
+      APP_LOG(APP_LOG_LEVEL_WARNING, "Unknown key in dict: %lu, forwarding to custom handler", tuple->key);
+	  if (ctx->custom_handler_callback != NULL)
+	  	ctx->custom_handler_callback(iter, context);
       break;
   }
 }

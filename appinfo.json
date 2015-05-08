@@ -1,26 +1,30 @@
 {
-  "uuid": "9f1e3aed-98f8-41ec-9bff-2c15fa4f3c24",
-  "shortName": "PbFaces",
-  "longName": "Pebble Faces",
-  "companyName": "MakeAwesomeHappen",
-  "versionCode": 3,
-  "versionLabel": "1.2",
-  "sdkVersion": "3",
-  "targetPlatforms": [
-    "aplite",
-    "basalt"
-  ],
-  "watchapp": {
-    "watchface": false
-  },
-  "appKeys": {
-    "NETDL_DATA": 1768777472,
-    "NETDL_BEGIN": 1768777473,
-    "NETDL_END": 1768777474,
-    "NETDL_CHUNK_SIZE": 1768777475,
-    "NETDL_URL": 1768777476
-  },
-  "resources": {
-    "media": []
-  }
+    "appKeys": {
+        "NETDL_BEGIN": 1768777473,
+        "NETDL_CHUNK_SIZE": 1768777475,
+        "NETDL_DATA": 1768777472,
+        "NETDL_END": 1768777474,
+        "NETDL_URL": 1768777476
+    },
+    "capabilities": [
+        ""
+    ],
+    "companyName": "MakeAwesomeHappen",
+    "longName": "Pebble Faces",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "sdkVersion": "3",
+    "shortName": "PbFaces",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "9f1e3aed-98f8-41ec-9bff-2c15fa4f3c24",
+    "versionCode": 3,
+    "versionLabel": "1.2",
+    "watchapp": {
+        "watchface": false
+    }
 }

@@ -1,3 +1,4 @@
+#pragma once
 #include <pebble.h>
 
 /* The key used to transmit download data. Contains byte array. */
@@ -20,6 +21,7 @@ typedef struct {
 } NetDownload;
 
 typedef void (*NetDownloadCallback)(NetDownload *image);
+typedef void (*CustomReceivedHandler)(DictionaryIterator *received, void *context);
 
 typedef struct {
   /* size of the data buffer allocated */
@@ -30,9 +32,11 @@ typedef struct {
   uint32_t index;
   /* Callback to call when we are done loading the data */
   NetDownloadCallback callback;
+  /* Callback to call when received any other messages */
+  CustomReceivedHandler custom_handler_callback;
 } NetDownloadContext;
 
-NetDownloadContext* netdownload_create_context(NetDownloadCallback callback);
+NetDownloadContext* netdownload_create_context(NetDownloadCallback callback, CustomReceivedHandler custom_handler_callback);
 
 void netdownload_initialize();
 void netdownload_deinitialize();
