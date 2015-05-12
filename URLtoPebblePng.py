@@ -18,19 +18,13 @@ def get_pebble_png(input_url):
     #Getting current aspect ratio of image
     tempIm = Image.open('TempImage.jpg')
     #first index is the width
-    width = tempIm.size[0] 
+    width = tempIm.size[0]
     #second indes is the height
     height = tempIm.size[1]
-
-    # Enhancing sharpness of image by a factor of 2. 
-    # Not essential
-    enhancer = ImageEnhance.Sharpness(tempIm)
-    enhancer.enhance(2);
 
     #maintaining aspect ratio of image
     ratio = min(144/float(width),168/float(height))
     size = int(float(width*ratio)),int(float(height*ratio))
-
 
     #resizing image to fit Pebble screen
     im_smaller = tempIm.resize(size,Image.ANTIALIAS)
@@ -38,7 +32,6 @@ def get_pebble_png(input_url):
     #converting to 64 color Pebble scheme and dithering image
     dithered_im = im_smaller.convert(mode='P',
      colors=64,
-     dither=1,
      palette=Image.FLOYDSTEINBERG)
 
     #saving dithered image as PNG
