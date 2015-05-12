@@ -100,3 +100,17 @@ on image processing, please refer to the [Advanced techniques
 videos](https://developer.getpebble.com/events/developer-retreat-2014/) from the
 Pebble Developer Retreat 2014.
 
+## Scripts for server side conversion
+
+Two python scripts for conversion of images to Pebble Time compliant images:
+
+- URLtoPebblePng.py makes use of the Python PIL library to read the URL of the 
+  image. It then resizes the image and dithers it to use only 64 colors
+- ImageServer.py is used to field conversion requests and serve the converted 
+  images.
+
+The pebble-js-app.js was modified to make POST requests to the server, followed 
+by GET requests to get the converted image. The URL of the server fielding the 
+requests should be changed by the user. 
+
+
