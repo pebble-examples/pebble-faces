@@ -34,11 +34,11 @@ function downloadBinaryResource(imageURL, callback, errorCallback) {
 
 
     /*POSTing the image URL to the server for conversion.
-      This conversion is only for Pebble Time. On a original
+      This conversion is only for Pebble Time. On an original
       Pebble the dithering should convert the image to have 
       to 2 colors*/
     var req1 = new XMLHttpRequest();
-    req1.open("POST",toServer, true);
+    req1.open("POST",toServer, false);
     imageURL = "imageurl=" + imageURL;
     req1.setRequestHeader("Content-type", "imageURL");
     req1.setRequestHeader("Content-length", imageURL.length);

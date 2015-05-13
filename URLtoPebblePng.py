@@ -1,12 +1,8 @@
-import png
-import feedparser
-import itertools
 import Image
 import urllib2
 import ctypes
-from HTMLParser import HTMLParser
-from PIL import ImageEnhance
 import argparse
+import os
 
 #Get image from URL and generate pebble compliant png
 def get_pebble_png(input_url):
@@ -37,13 +33,15 @@ def get_pebble_png(input_url):
     #saving dithered image as PNG
     dithered_im.save("Pebble_image.png","PNG")
 
+    os.remove("TempImage.jpg")
+
 
 def main():
     parser = argparse.ArgumentParser(
         description='Get image from URL and convert to 64-color palettized PNG for Pebble Time')
     parser.add_argument('input_url', type=str, help='URL from which to convert image')
     args = parser.parse_args()
-    get_pebble_png(args.input_url, args.output_filename)
+    get_pebble_png(args.input_url)
 
 if __name__ == '__main__':
     main()
