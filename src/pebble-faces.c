@@ -16,7 +16,7 @@ static char *images[] = {
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-faces/thomas.png",
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-faces/matt.png",
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-faces/katharine.png",
-  "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-faces/katherine.png",
+  "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-faces/katherinexxx.png",
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-faces/alex.png",
   "http://assets.getpebble.com.s3-website-us-east-1.amazonaws.com/pebble-faces/lukasz.png"
 };
@@ -107,7 +107,7 @@ static void click_config_provider(void *context) {
 static void init(void) {
   // Need to initialize this first to make sure it is there when
   // the window_load function is called by window_stack_push.
-  netdownload_initialize(download_complete_handler, NULL);
+  netdownload_initialize(download_complete_handler, NULL, NULL);
 
   window = window_create();
 #ifdef PBL_SDK_2

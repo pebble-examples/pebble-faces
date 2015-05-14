@@ -1,6 +1,6 @@
 #include "netdownload.h"
 
-NetDownloadContext* netdownload_create_context(NetDownloadCallback callback, CustomReceivedHandler custom_handler_callback) {
+NetDownloadContext* netdownload_create_context(NetDownloadCallback callback, CustomReceivedHandler custom_handler_callback, CustomErrorHandler custom_error_callback) {
   NetDownloadContext *ctx = malloc(sizeof(NetDownloadContext));
 
   ctx->length = 0;
@@ -8,6 +8,7 @@ NetDownloadContext* netdownload_create_context(NetDownloadCallback callback, Cus
   ctx->data = NULL;
   ctx->callback = callback;
   ctx->custom_handler_callback = custom_handler_callback;
+  ctx->custom_error_callback = custom_error_callback;
 
   return ctx;
 }
@@ -19,8 +20,8 @@ void netdownload_destroy_context(NetDownloadContext *ctx) {
   free(ctx);
 }
 
-void netdownload_initialize(NetDownloadCallback callback, CustomReceivedHandler custom_handler_callback) {
-  NetDownloadContext *ctx = netdownload_create_context(callback, custom_handler_callback);
+void netdownload_initialize(NetDownloadCallback callback, CustomReceivedHandler custom_handler_callback, CustomErrorHandler custom_error_callback) {
+  NetDownloadContext *ctx = netdownload_create_context(callback, custom_handler_callback, custom_error_callback);
   APP_LOG(APP_LOG_LEVEL_DEBUG, "NetDownloadContext = %p", ctx);
   app_message_set_context(ctx);
 
@@ -140,7 +141,10 @@ char *translate_error(AppMessageResult result) {
 }
 
 void netdownload_dropped(AppMessageResult reason, void *context) {
+  NetDownloadContext *ctx = (NetDownloadContext*) context;
   APP_LOG(APP_LOG_LEVEL_ERROR, "Dropped message! Reason given: %s", translate_error(reason));
+  if (ctx->custom_error_callback != NULL)
+    ctx->custom_error_callback(NULL, reason, context); 
 }
 
 void netdownload_out_success(DictionaryIterator *iter, void *context) {
@@ -148,6 +152,9 @@ void netdownload_out_success(DictionaryIterator *iter, void *context) {
 }
 
 void netdownload_out_failed(DictionaryIterator *iter, AppMessageResult reason, void *context) {
+  NetDownloadContext *ctx = (NetDownloadContext*) context;
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Failed to send message. Reason = %s", translate_error(reason));
+  if (ctx->custom_error_callback != NULL)
+    ctx->custom_error_callback(iter, reason, context); 
 }
 
