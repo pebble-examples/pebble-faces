@@ -39,7 +39,7 @@ function downloadBinaryResource(imageURL, callback, errorCallback) {
       to 2 colors*/
     var req1 = new XMLHttpRequest();
     req1.open("POST",toServer, false);
-    imageURL = "imageurl=" + imageURL;
+    imageURL = "imageurl=" + imageURL+"&PebbleType=0";
     req1.setRequestHeader("Content-type", "imageURL");
     req1.setRequestHeader("Content-length", imageURL.length);
     req1.setRequestHeader("Connection", "close");    
