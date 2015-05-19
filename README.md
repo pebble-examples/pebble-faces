@@ -5,6 +5,8 @@ This Pebble application downloads PNG images from the Internet, de-compress the
 PNG into a bitmap and then display it on the screen of Pebble. It will display
 pictures of the Pebble developer evangelism team!
 
+![](screenshots/screenshot.png)
+
 It is designed to be easily reusable in your own application.
 
 The main parts are:
