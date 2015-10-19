@@ -1,5 +1,7 @@
 #include "netdownload.h"
 
+#define MIN(a,b)  ((a) < (b) ? (a) : (b))
+
 NetDownloadContext* netdownload_create_context(NetDownloadCallback callback) {
   NetDownloadContext *ctx = malloc(sizeof(NetDownloadContext));
 
@@ -27,8 +29,10 @@ void netdownload_initialize(NetDownloadCallback callback) {
   app_message_register_inbox_dropped(netdownload_dropped);
   app_message_register_outbox_sent(netdownload_out_success);
   app_message_register_outbox_failed(netdownload_out_failed);
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Max buffer sizes are %li / %li", app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
-  app_message_open(app_message_inbox_size_maximum(), app_message_outbox_size_maximum());
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Max buffer sizes are %li / %li",
+    app_message_inbox_size_maximum(),
+    app_message_outbox_size_maximum());
+  app_message_open(app_message_inbox_size_maximum(), MIN(512, app_message_outbox_size_maximum()));
 }
 
 void netdownload_deinitialize() {
