@@ -8,7 +8,8 @@
   "sdkVersion": "3",
   "targetPlatforms": [
     "aplite",
-    "basalt"
+    "basalt",
+    "chalk"
   ],
   "watchapp": {
     "watchface": false
