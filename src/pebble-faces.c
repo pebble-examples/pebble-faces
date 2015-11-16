@@ -1,8 +1,6 @@
 #include <pebble.h>
 #include "netdownload.h"
-#ifdef PBL_PLATFORM_APLITE
-#include "png.h"
-#endif
+
 static Window *window;
 static TextLayer *text_layer;
 static BitmapLayer *bitmap_layer;
@@ -67,11 +65,7 @@ void download_complete_handler(NetDownload *download) {
   printf("Loaded image with %lu bytes", download->length);
   printf("Heap free is %u bytes", heap_bytes_free());
 
-  #ifdef PBL_PLATFORM_APLITE
-  GBitmap *bmp = gbitmap_create_with_png_data(download->data, download->length);
-  #else
-    GBitmap *bmp = gbitmap_create_from_png_data(download->data, download->length);
-  #endif
+  GBitmap *bmp = gbitmap_create_from_png_data(download->data, download->length);
   bitmap_layer_set_bitmap(bitmap_layer, bmp);
 
   // Save pointer to currently shown bitmap (to free it)
@@ -81,11 +75,8 @@ void download_complete_handler(NetDownload *download) {
   current_bmp = bmp;
 
   // Free the memory now
-  #ifdef PBL_PLATFORM_APLITE
-  // gbitmap_create_with_png_data will free download->data
-  #else
-    free(download->data);
-  #endif
+  free(download->data);
+
   // We null it out now to avoid a double free
   download->data = NULL;
   netdownload_destroy(download);
@@ -101,15 +92,11 @@ static void init(void) {
   netdownload_initialize(download_complete_handler);
 
   window = window_create();
-#ifdef PBL_SDK_2
-  window_set_fullscreen(window, true);
-#endif
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
   });
-  const bool animated = true;
-  window_stack_push(window, animated);
+  window_stack_push(window, true);
 
   accel_tap_service_subscribe(tap_handler);
 }
@@ -121,9 +108,6 @@ static void deinit(void) {
 
 int main(void) {
   init();
-
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", window);
-
   app_event_loop();
   deinit();
 }
