@@ -1,0 +1,5 @@
+Python libraries that need to be installed:
+PIL:
+pip install PIL  --allow-unverified PIL --allow-all-external
+
+

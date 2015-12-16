@@ -1,5 +1,9 @@
 var transferInProgress = false;
 
+/*Global URL var for image conversion server
+  Replace with your server */
+var toServer = "http://35418b8a.ngrok.com";
+
 Pebble.addEventListener("ready", function(e) {
   console.log("NetDownload JS Ready");
 });
@@ -27,8 +31,24 @@ Pebble.addEventListener("appmessage", function(e) {
 });
 
 function downloadBinaryResource(imageURL, callback, errorCallback) {
+
+
+    /*POSTing the image URL to the server for conversion.
+      This conversion is only for Pebble Time. On an original
+      Pebble the dithering should convert the image to have 
+      to 2 colors*/
+    var req1 = new XMLHttpRequest();
+    req1.open("POST",toServer, false);
+    imageURL = "imageurl=" + imageURL+"&PebbleType=0";
+    req1.setRequestHeader("Content-type", "imageURL");
+    req1.setRequestHeader("Content-length", imageURL.length);
+    req1.setRequestHeader("Connection", "close");    
+    req1.send(imageURL);
+
+    //getting converted image, which is always at <server>/Pebble_image.png
     var req = new XMLHttpRequest();
-    req.open("GET", imageURL,true);
+    var img_return = toServer+ "/Pebble_image.png"; 
+    req.open("GET", img_return, true); //do get from image url which is standard
     req.responseType = "arraybuffer";
     req.onload = function(e) {
         console.log("loaded");
